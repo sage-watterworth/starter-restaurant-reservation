@@ -1,6 +1,13 @@
 exports.up = function (knex) {
   return knex.schema.createTable("reservations", (table) => {
     table.increments("reservation_id").primary();
+    table.string("first_name", 50);
+    table.string("last_name", 50);
+    table.string("mobile_number", 15);
+    table.date("reservation_date");
+    table.time("reservation_time");
+    table.integer("people");
+    table.string("status").notNullable().defaultTo("booked");
     table.timestamps(true, true);
   });
 };
