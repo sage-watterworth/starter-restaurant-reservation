@@ -92,6 +92,43 @@ async function validPeople(req, res, next){
   }
 }
 
+async function validFutureDate(req,res,next){
+    const reservationDate = new Date(
+      `${req.body.data.reservation_date} ${req.body.data.reservation_time}:00.000`
+    );
+    const today = new Date();
+
+    if (reservationDate.getDay() === 2) {
+      return next({ status: 400, message: "restaurant is closed on tuesday",
+    });
+    }
+
+    if (reservationDate < today) {
+      return next({ status: 400, message: "reservation must be in the future",
+      });
+    }
+
+    if (reservationDate.getHours() < 10 || (reservationDate.getHours() === 10 && reservationDate.getMinutes() < 30)) {
+      return next({ status: 400, message: "restaurant is not open until 10:30AM",
+      });
+    }
+
+    if (reservationDate.getHours() > 22 || (reservationDate.getHours() === 22 && reservationDate.getMinutes() >= 30)) {
+      return next({ status: 400, message: "restaurant is closed after 10:30PM",
+      });
+    }
+
+    if (reservationDate.getHours() > 21 || (reservationDate.getHours() === 21 && reservationDate.getMinutes() > 30)) {
+      return next({ status: 400, message: "reservation must be made at least an hour before closing (10:30PM)",
+      });
+    }
+else{
+  return next();
+  }
+}
+
+
+
 function read(req, res){
   const reservation = res.locals.reservation;
     res.status(200).json({ data: reservation });
@@ -109,5 +146,5 @@ async function createReservation(req, res){
 module.exports = {
   list: asyncErrorBoundary(list),
   read: [asyncErrorBoundary(reservationExists), read],
-  create: [validData, asyncErrorBoundary(fieldExists), validDate, validTime, validPeople, createReservation]
+  create: [validData, asyncErrorBoundary(fieldExists), validDate, validFutureDate, validTime, validPeople, asyncErrorBoundary(createReservation)]
 };
