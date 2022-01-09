@@ -3,6 +3,7 @@ exports.up = function (knex) {
       table.increments("table_id").primary();
       table.string("table_name");// at least two characters long
       table.integer("capacity");// at least one person
+      table.string("status")
       table.integer("reservation_id")
         .references("reservation_id")
         .inTable("reservations")
