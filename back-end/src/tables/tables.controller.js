@@ -71,25 +71,36 @@ async function validateTableId(req, res, next) {
   }
 
 async function validateTableSeats (req, res, next){
-    if(res.locals.table.reservation_id !== null){
-        return({status: 400, message: "table is occupied"})
+    if (res.locals.table.status === "occupied") {
+        return next({
+          status: 400,
+          message: "the table you selected is currently occupied",
+        });
+      }
+
+      if (res.locals.reservation.status === "seated") {
+        return next({
+          status: 400,
+          message: "the reservation you selected is already seated",
+        });
+      }
+
+      if (res.locals.table.capacity < res.locals.reservation.people) {
+        return next({
+          status: 400,
+          message: `the table you selected does not have enough capacity to seat ${res.locals.reservation.people} people`,
+        });
+      }
+
+      next();
     }
-    // if (req.body.data.reservation_id.status === "seated"){
-    //     return({status:400, message: "the reservation is already seated"})
-    // }
-    if (res.locals.table.capacity < res.locals.reservation.people){
-        return({status: 400, message: "table does not have sufficent capacity"})
-    }
-    else{
-        return next();
-    }
-}
+
 
 async function seatTable (req, res){
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation.reservation_id;
     const tableSeated = { ...table_id, reservation_id: reservation_id};
-        await service.seatTable(tableSeated);
+        await service.occupy(tableSeated);
         res.status(200).json({ data: res.locals.table });
     }
 
@@ -97,6 +108,12 @@ async function seatTable (req, res){
 
 module.exports = {
     list: [asyncErrorBoundary(listTables)],
-    update: [validData, validateTableId, validateReservation, validateTableSeats, seatTable],
-    create: [validData, validFields, create]
+
+    update: [asyncErrorBoundary(validData),
+            asyncErrorBoundary(validateTableId),
+            asyncErrorBoundary(validateReservation),
+            asyncErrorBoundary(validateTableSeats),
+            asyncErrorBoundary(seatTable)],
+
+    create: [validData, validFields, create],
   };
