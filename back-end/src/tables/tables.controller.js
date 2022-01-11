@@ -55,8 +55,9 @@ async function validateReservation (req, res, next){
     if (!reservation) {
         return next({status: 404, message: `reservation_id ${reservation_id} does not exist`,});
     }
+    res.locals.reservation = reservation;
     return next();
-    }
+  }
 
 async function validateTableId(req, res, next) {
     const { table_id } = req.params;
@@ -70,13 +71,13 @@ async function validateTableId(req, res, next) {
   }
 
 async function validateTableSeats (req, res, next){
-    if(req.body.data.status === "occupied"){
+    if(res.locals.table.reservation_id !== null){
         return({status: 400, message: "table is occupied"})
     }
-    if (req.body.data.reservation_id.status === "seated"){
-        return({status:400, message: "the reservation is already seated"})
-    }
-    if (req.body.data.capacity < req.body.data.reservation_id.people){
+    // if (req.body.data.reservation_id.status === "seated"){
+    //     return({status:400, message: "the reservation is already seated"})
+    // }
+    if (res.locals.table.capacity < res.locals.reservation.people){
         return({status: 400, message: "table does not have sufficent capacity"})
     }
     else{
@@ -84,21 +85,18 @@ async function validateTableSeats (req, res, next){
     }
 }
 
-async function udpate (req, res){
-    await service.tableOccupied(req.body.data.table_id, req.body.data.reservation_id);
-      await service.updateReservation(req.body.data.reservation_id, "seated");
-      res.status(200).json({ data: { status: "seated" } });
+async function seatTable (req, res){
+    const table_id = res.locals.table.table_id;
+    const reservation_id = res.locals.reservation.reservation_id;
+    const tableSeated = { ...table_id, reservation_id: reservation_id};
+        await service.seatTable(tableSeated);
+        res.status(200).json({ data: res.locals.table });
     }
-
-
-
-
-
 
 
 
 module.exports = {
     list: [asyncErrorBoundary(listTables)],
-    update: [validData, validateTableId, validateReservation, validateTableSeats, udpate],
+    update: [validData, validateTableId, validateReservation, validateTableSeats, seatTable],
     create: [validData, validFields, create]
   };

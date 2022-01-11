@@ -20,17 +20,17 @@ function read(table_id) {
     .returning("*");
   }
 
-  function tableOccupied(table_id, reservation_id){
-      return knex("tables")
-      .where({table_id: table_id})
-      .update({ reservation_id: reservation_id, status: "occupied"});
-  }
+//   function tableOccupied(table_id, reservation_id){
+//       return knex("tables")
+//       .where({table_id: table_id})
+//       .update({ reservation_id: reservation_id});
+//   }
 
-  function tableFree(table_id) {
-    return knex("tables")
-      .where({ table_id: table_id })
-      .update({ reservation_id: null, status: "free" });
-  }
+//   function tableFree(table_id) {
+//     return knex("tables")
+//       .where({ table_id: table_id })
+//       .update({ reservation_id: null});
+//   }
 
   function readReservation(reservation_id) {
     return knex("reservations")
@@ -39,20 +39,19 @@ function read(table_id) {
       .first();
   }
 
-  function updateReservation(reservation_id, status) {
-    return knex("reservations")
-      .where({ reservation_id: reservation_id })
-      .update({ status: status });
-  }
 
+  function seatTable(reservation_id) {
+    return knex("tables")
+      .select("*")
+      .where({reservation_id: reservation_id})
+      .update({ reservation_id: null})
+  }
 
 
 module.exports = {
     list,
     read,
     create,
-    tableOccupied,
-    tableFree,
     readReservation,
-    updateReservation
+    seatTable
 }
