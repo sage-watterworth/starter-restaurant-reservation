@@ -10,5 +10,7 @@ router
 router
   .route("/:table_id/seat")
   .put(controller.update)
+  .delete(controller.destroy)
+
 
 module.exports = router;

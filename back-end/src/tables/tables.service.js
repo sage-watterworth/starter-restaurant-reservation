@@ -28,6 +28,7 @@ function read(table_id) {
 
   function free(table_id) {
     return knex("tables")
+      .select("*")
       .where({ table_id: table_id })
       .update({ reservation_id: null, status: "free" });
   }
@@ -41,12 +42,6 @@ function read(table_id) {
 
 
 
-//   function seatTable(reservation_id) {
-//     return knex("tables")
-//       .select("*")
-//       .where({reservation_id: reservation_id})
-//       .update({ reservation_id: reservation_id, status: "occupied" })
-//   }
 
 
 module.exports = {
