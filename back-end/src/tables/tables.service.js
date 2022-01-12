@@ -40,6 +40,12 @@ function read(table_id) {
       .first();
   }
 
+  function updateReservationStatus(reservation_id, status) {
+    return knex("reservations")
+      .where({ reservation_id: reservation_id })
+      .update({ status: status });
+  }
+
 
 
 
@@ -50,6 +56,6 @@ module.exports = {
     create,
     readReservation,
     occupy,
-    free
-    // seatTable
+    free,
+    updateReservationStatus
 }
