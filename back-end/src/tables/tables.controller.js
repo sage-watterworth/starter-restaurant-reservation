@@ -71,6 +71,7 @@ async function validateTableId(req, res, next) {
   }
 
 async function validateTableSeats (req, res, next){
+    console.log(res.locals.table);
     if (res.locals.table.status === "occupied") {
         return next({
           status: 400,
@@ -99,11 +100,10 @@ async function validateTableSeats (req, res, next){
 async function seatTable (req, res){
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation.reservation_id;
-    const tableSeated = { ...table_id, reservation_id: reservation_id};
-        await service.occupy(tableSeated);
+    // const tableSeated = { ...table_id, reservation_id: reservation_id};
+        await service.occupy(table_id, reservation_id);
         res.status(200).json({ data: res.locals.table });
     }
-
 
 
 module.exports = {
@@ -116,4 +116,5 @@ module.exports = {
             asyncErrorBoundary(seatTable)],
 
     create: [validData, validFields, create],
+
   };

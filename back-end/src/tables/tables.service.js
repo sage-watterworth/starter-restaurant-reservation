@@ -40,6 +40,7 @@ function read(table_id) {
   }
 
 
+
 //   function seatTable(reservation_id) {
 //     return knex("tables")
 //       .select("*")
