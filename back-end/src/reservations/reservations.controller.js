@@ -32,18 +32,16 @@ function validData(req, res, next) {
   next();
 }
 
+
+
 async function list(req, res, next) { //returns a list of reservations (specific to query parameters)
-  if (!req.query.date) {
-    return res.status(200).json({ data: await service.list() });
-  }
-  else{
-  const date = req.query.date;
-  // const mobile_number = request.query.mobile_number;
-  const reservations = await service.list(date/*, mobile_number*/);
-  const filteredReservation = reservations.filter((reservation) => reservation.status !== "finished");
-  res.json({ data: filteredReservation });
-      // res.status(200).json({ data: await service.listByDate(req.query.date) });
-    }
+  if (req.query.date || req.query.mobile_number){
+    const date = req.query.date;
+    const mobile_number = req.query.mobile_number;
+    const reservations = await service.list(date, mobile_number);
+    const filteredReservation = reservations.filter((reservation) => reservation.status !== "finished");
+    res.json({ data: filteredReservation });
+      }
   }
 
 
