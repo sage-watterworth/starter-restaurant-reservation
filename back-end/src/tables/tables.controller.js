@@ -71,7 +71,6 @@ async function validateTableId(req, res, next) {
   }
 
 async function validateTableSeats (req, res, next){
-    console.log(res.locals.table);
     if (res.locals.table.status === "occupied") {
         return next({
           status: 400,
@@ -105,9 +104,9 @@ async function seatTable (req, res){
         res.status(200).json({ data: res.locals.table });
     }
 
-async function destroy (req, res){
+async function destroy (req, res, next){
     const table_id = res.locals.table
-    if(res.locals.table.status !== "occupied"){
+    if(table_id.status !== "occupied"){
         return next({status: 400, message: "Table is not occupied"})
     }
     else {
@@ -116,6 +115,7 @@ async function destroy (req, res){
 
     res.status(200).json({data: {status: "free"}});
     }
+
 }
 
 
