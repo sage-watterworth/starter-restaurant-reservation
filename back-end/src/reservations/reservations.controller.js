@@ -33,7 +33,6 @@ function validData(req, res, next) {
 }
 
 
-
 async function list(req, res, next) { //returns a list of reservations (specific to query parameters)
   if (req.query.date || req.query.mobile_number){
     const date = req.query.date;
@@ -139,6 +138,13 @@ function read(req, res){
     res.status(200).json({ data: reservation });
   }
 
+async function edit(req, res){
+  const reservation = res.locals.reservation
+  const updatedReservation = req.body.data
+  const editReservation = await service.edit( reservation.reservation_id, updatedReservation);
+    res.status(200).json({ data: editReservation[0] });
+  }
+
 
 async function validateStatus(req, res, next) {
   const reservation = req.body.data
@@ -215,5 +221,6 @@ module.exports = {
           validateStatusCreate,
           asyncErrorBoundary(createReservation)],
 
-  update: [validData, reservationExists, validateStatus, validateStatusUpdate, updateStatus]
+  update: [validData, reservationExists, validateStatus, validateStatusUpdate, updateStatus],
+  edit: [validData, reservationExists, fieldExists, validDate, validFutureDate, validTime, validPeople, validateStatus, validateStatusUpdate, edit]
 };
