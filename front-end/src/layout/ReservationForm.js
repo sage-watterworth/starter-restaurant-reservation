@@ -17,21 +17,25 @@ const [error, setError] = useState(null)
 
 function submitHandler(e){
     e.preventDefault()
-    createReservation({
+    const reservation = {
         first_name : firstName,
         last_name : lastName,
         mobile_number : mobileNumber,
         reservation_time : reservationTime,
         reservation_date : reservationDate,
         people : +people
-    })
+    }
+    createReservation(reservation)
     .then(console.log)
     .then(loadDashboard)
     .then(() =>
-            history.push(`/dashboard?date=${reservationDate}`)
+            history.push(`/dashboard?date=${reservation.reservation_date}`)
           )
     .catch(setError)
 }
+
+
+
 
 
 return (
@@ -123,6 +127,7 @@ return (
 
 )
 }
+
 
 
 export default ReservationForm;
