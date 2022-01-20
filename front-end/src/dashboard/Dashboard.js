@@ -4,6 +4,7 @@ import { listReservations } from "../utils/api";
 import {today, previous, next} from "../utils/date-time"
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
+import { formatAsTime, formatAsDate} from "../utils/date-time"
 
 /**
  * Defines the dashboard page.
@@ -34,10 +35,8 @@ function loadDashboard() {
 }
 
 
-    /** uses:
-     * previous() to set the reservations' list date to be the previous day
-     * next() to set the reservations' list date to be the following day
-     * today() to set reservation's list date to current day
+    /*
+    allow user to toggle between yesterday, today, and tomorrow's reservations
      */
 function handleClick({ target }) {
 let newDate;
@@ -67,7 +66,14 @@ console.log(reservations)
       <div className="d-md-flex mb-3">
         <h4 className="mb-0">Reservations for date</h4>
 
-
+        <button
+            className="btn-xs rounded btn-success btn-outline-success m-1 text-white"
+            type="button"
+            name="previous"
+            onClick={handleClick}
+          >
+            Yesterday
+          </button>
         <button
             className="btn-xs rounded btn-success btn-outline-success m-1 text-white"
             type="button"
@@ -89,15 +95,15 @@ console.log(reservations)
 
       </div>
       <ErrorAlert error={reservationsError} />
-      {reservations.map (res => <>
+      {reservations.map (res => <ul key = {res.reservation_id}>
       <li key="{first_name}">{res.first_name}</li>
       <li key="{last_name}">{res.last_name}</li>
       <li key="{mobile_number}">{res.mobile_number}</li>
-      <li key="{reservation_date}">{res.reservation_date.substr(0, 10)}</li>
-      <li key="{reservation_time}">{res.reservation_time.substr(0, 5)}</li>
+      <li key="{reservation_date}">{formatAsDate(res.reservation_date)}</li>
+      <li key="{reservation_time}">{formatAsTime(res.reservation_time)}</li>
       <li key="{people}">{res.people}</li>
       <li key="{status}">{res.status}</li>
-      </>)}
+      </ul>)}
     </main>
   );
 }
