@@ -5,8 +5,8 @@ import { listTables } from "../utils/api";
 import {today, previous, next} from "../utils/date-time"
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
-import { formatAsTime, formatAsDate} from "../utils/date-time"
-
+// import { formatAsTime, formatAsDate} from "../utils/date-time";
+import Reservation from "../layout/Reservation";
 /**
  * Defines the dashboard page.
  * @param date
@@ -15,7 +15,7 @@ import { formatAsTime, formatAsDate} from "../utils/date-time"
  */
 
 function Dashboard({ date }) {
-  const [reservations, setReservations] = useState([]);
+  const [, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [, setError] = useState();
@@ -78,7 +78,6 @@ let useDate;
     history.push(`/dashboard?date=${newDate}`);
   }
 
-console.log(reservations)
   return (
     <main>
       <h1>Dashboard</h1>
@@ -114,24 +113,27 @@ console.log(reservations)
 
       </div>
       <ErrorAlert error={reservationsError} />
-      {reservations.map (res => <ul key = {res.reservation_id}>
-      <li key="{first_name}">{res.first_name}</li>
-      <li key="{last_name}">{res.last_name}</li>
-      <li key="{mobile_number}">{res.mobile_number}</li>
-      <li key="{reservation_date}">{formatAsDate(res.reservation_date)}</li>
-      <li key="{reservation_time}">{formatAsTime(res.reservation_time)}</li>
-      <li key="{people}">{res.people}</li>
-      <li key="{status}">{res.status}</li>
-      </ul>)}
+
+      <Reservation/>
+
+      {/* // <li key="{first_name}">{res.first_name}</li>
+      // <li key="{last_name}">{res.last_name}</li>
+      // <li key="{mobile_number}">{res.mobile_number}</li>
+      // <li key="{reservation_date}">{formatAsDate(res.reservation_date)}</li>
+      // <li key="{reservation_time}">{formatAsTime(res.reservation_time)}</li>
+      // <li key="{people}">{res.people}</li>
+      // <li key="{status}">{res.status}</li>
+      // </ul>)} */}
 <div>
-{tables.map (tab => <ul key = {tab.table_id}>
-        <li key="{table_name}">{tab.table_name}</li>
-        <li key="{capacity}">{tab.capacity}</li>
-      </ul>)}
+      {tables.map (tab => <ul key = {tab.table_id}>
+              <li key="{table_name}">{tab.table_name}</li>
+              <li key="{capacity}">{tab.capacity}</li>
+            </ul>)}
 </div>
 
+<div>
 
-
+</div>
     </main>
   );
 }

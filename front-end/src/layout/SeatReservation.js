@@ -101,17 +101,8 @@ const showTables = () => {
             {showTables()}
           </select>
 
-          <button
-            className="btn btn-success m-1"
-            type="submit"
-          >
-            Submit
-          </button>
-          <button
-            className="btn btn-danger m-1"
-            type="button"
-            onClick={history.goBack}
-          >
+          <button className="btn btn-success m-1" type="submit">Submit</button>
+          <button className="btn btn-danger m-1" type="button" onClick={history.goBack}>
             Cancel
           </button>
         </form>
