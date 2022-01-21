@@ -114,7 +114,7 @@ let useDate;
       <ErrorAlert error={reservationsError} />
 {reservations.map (res => <Reservation reservation = {res} />)}
 
-{tables.map (tab => <ListTables table={tab}/>)}
+{tables.map (tab => <ListTables table={tab} refresh={()=>history.go(0)}/>)}
 
 
     </main>

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
-import {createReservation} from "../utils/api"
-import { useHistory } from "react-router-dom";
+import {createReservation, editReservation} from "../utils/api"
+import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "./ErrorAlert"
 
 function ReservationForm({loadDashboard}){
 const history = useHistory();
+const {reservation_id} = useParams();
 
 const [firstName, setFirstName] = useState("")
 const [lastName, setLastName] = useState("")
@@ -21,6 +22,10 @@ const newReservation = {
     reservation_time : reservationTime,
     reservation_date : reservationDate,
     people : +people
+}
+
+if ({reservation_id}){
+
 }
 
 function submitHandler(e){

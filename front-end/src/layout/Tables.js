@@ -2,9 +2,9 @@ import { useState } from "react";
 import { finishTable} from "../utils/api";
 import Reservation from "./Reservation"
 
-function ListTables({table}) {
-  const [reservations, setReservations] = useState();
-  const [error, setError] = useState();
+function ListTables({table, refresh}) {
+  // const [reservations, setReservations] = useState();
+  // const [error, setError] = useState();
 
   if (!table) return null;
 
@@ -17,11 +17,11 @@ function ListTables({table}) {
       const abortController = new AbortController();
       finishTable(
         table.table_id,
-        abortController.signal)
+        abortController.signal).then(refresh)
 
-        Reservation()
-        .then(setReservations)
-        .catch(setError);
+        // Reservation()
+        // .then(setReservations)
+        // .catch(setError);
 
       return () => abortController.abort();
     }
@@ -34,7 +34,7 @@ function ListTables({table}) {
       <p key ="{capacity}">{table.capacity}</p>
       <p data-table-id-status={table.table_id}>
         {table.status}
-        {table.reservation_id ? table.reservation_id : "--"}
+        {/* {table.reservation_id ? table.reservation_id : "--"} */}
       </p>
       {table.status === "occupied" && (
         <p className="text-center">

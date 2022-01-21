@@ -40,7 +40,8 @@ async function listTables(req, res) {
 
 
 async function create (req, res){ // creates a new table
-    const newTable = { ...req.body.data, status: "free" };
+    const status = req.body.data.reservation_id ? "occupied" : "free"
+    const newTable = { ...req.body.data, status };
     const response = await service.create(newTable)
     res.status(201).json({ data: response[0] });
 }
