@@ -103,3 +103,8 @@ export async function updateResStatus(reservation_id, status, signal) {
   const body = JSON.stringify({ data: { status: status } });
   return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
 }
+
+export async function finishTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  return await fetchJson(url, { headers, signal, method: "DELETE" }, []);
+}

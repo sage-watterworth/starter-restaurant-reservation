@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { listReservations } from "../utils/api";
+import { listReservations} from "../utils/api";
 import { listTables } from "../utils/api";
+import ListTables from "../layout/Tables";
 import {today, previous, next} from "../utils/date-time"
 import ErrorAlert from "../layout/ErrorAlert";
 import useQuery from "../utils/useQuery";
@@ -18,7 +19,7 @@ function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [error, setError] = useState();
+  const [, setError] = useState();
 
   const history = useHistory();
   const dateQuery = useQuery().get("date");
@@ -39,7 +40,6 @@ function loadDashboard() {
 
 useEffect(() => {
   const abortController = new AbortController();
-
   async function loadTables() {
     try {
       setError([]);
@@ -109,24 +109,14 @@ let useDate;
           >
             Tomorrow
           </button>
-
-
       </div>
+
       <ErrorAlert error={reservationsError} />
+{reservations.map (res => <Reservation reservation = {res} />)}
 
-      {reservations.map (res => <Reservation reservation = {res} />)}
+{tables.map (tab => <ListTables table={tab}/>)}
 
-<div>
 
-      {tables.map (tab => <ul key = {tab.table_id}>
-              <li key="{table_name}">{tab.table_name}</li>
-              <li key="{capacity}">{tab.capacity}</li>
-            </ul>)}
-</div>
-
-<div>
-
-</div>
     </main>
   );
 }

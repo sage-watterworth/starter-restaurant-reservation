@@ -47,8 +47,8 @@ const givenRes = reservation
     if (givenTable.capacity < givenRes.people) {
         submitErrors.push("Table selected cannot seat number of party size.");
     }
-console.log(submitErrors)
-    if (submitErrors) {
+console.log("length"+submitErrors.lenght)
+    if (submitErrors.length > 0) {
       setErrors(new Error(submitErrors.toString()));
       return false;
     }
