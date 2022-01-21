@@ -33,7 +33,7 @@ function submitHandler(e){
         .then(console.log)
         .then(loadDashboard)
         .then(() =>
-                history.push(`/dashboard?date=${newReservation.reservationDate}`)
+                history.push(`/dashboard?date=${newReservation.reservation_date}`)
               )
         .catch(setErrors)
     }

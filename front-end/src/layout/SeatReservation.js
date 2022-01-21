@@ -1,92 +1,91 @@
 import {useState, useEffect} from "react";
 import { useHistory, useParams } from "react-router";
-import {listReservations, seatTable} from "../utils/api"
+import {getReservation, seatTable, listTables} from "../utils/api"
 import ErrorAlert from "./ErrorAlert";
 
-function SeatReservation ({tables, loadDashboard}){
+function SeatReservation (){
     const history = useHistory();
     const {reservation_id} = useParams();
 
     const [reservation, setReservation] = useState([])
     const [table_id, setTable_id] = useState(0);
-    const [resError, setResError] = useState([]);
-    const [errors, setErrors] = useState([]);
+    const [tables, setTables] = useState([]);
+    const [errors, setErrors] = useState(null);
+    const submitErrors = [];
 
 
 useEffect(() => {
     const abortController = new AbortController();
-    setResError(null);
-    listReservations(null, abortController.signal)
+    getReservation(reservation_id)
         .then(setReservation)
-        .catch(setResError)
-    return () => abortController.abort();
-}, []);
-if (!tables || !reservation) return null;
+        .catch(setErrors)
 
+    listTables()
+        .then(setTables)
+        .catch(setErrors)
+    return () => abortController.abort();
+}, [reservation_id]);
 
 
 function validateSeat () {
-    const submitErrors = [];
 
-const givenTable = tables.find((table) => table.table_id === +(table_id));
-const givenRes = reservation.find((res)=> res.reservation_id === +(reservation_id));
+const givenTable = tables.find((table) => table.table_id === Number(table_id));
+const givenRes = reservation
 
-if(!givenTable){
-    submitErrors.push("Table does not exist");
-}
-else{
-    if (givenTable.status === "occupied"){
-        submitErrors.push("This table is occupied")
-}
-else{
-    if (givenTable.capacity < givenRes.people){
-        submitErrors.push("This table capacity is not large enough")
-}
 
-else {
-   if (!givenRes){
-   submitErrors.push("reservation does not exist");
-}
-
-         }
+    if (!givenTable) {
+      submitErrors.push("Table does not exist.");
     }
-}
+    if (!givenRes) {
+        submitErrors.push("Reservation does not exist.");
+    }
 
-setErrors(submitErrors)
-return submitErrors.length === 0;
+    if (givenTable.reservation_id) {
+        submitErrors.push("Table selected is occupied.");
+    }
 
-}
+    if (givenTable.capacity < givenRes.people) {
+        submitErrors.push("Table selected cannot seat number of party size.");
+    }
+console.log(submitErrors)
+    if (submitErrors) {
+      setErrors(new Error(submitErrors.toString()));
+      return false;
+    }
+        return true;
+  }
+
+
+
 
 function submitHandler(event){
      event.preventDefault();
+     setErrors(null);
      const abortController = new AbortController();
      if (validateSeat()){
-        seatTable(table_id, reservation_id, abortController.signal)
-        .then(loadDashboard)
-        .then(()=> history.pushState(`/dashboard`))
-        .catch(setErrors)
+        seatTable(reservation_id, table_id, abortController.signal)
+        .then(() => history.push("/dashboard"))
+        .catch(setErrors);
     }
     return () => abortController.abort();
     }
-
-const returnError = () => {
-    return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
-    };
 
 const showTables = () => {
     return tables.map((table)=> (
         <option key={table.table_id} value={table.table_id}>
-            {table.table_name} : {table.capacity}
+            {table.table_name} - {table.capacity}
         </option>
     )
     )
 };
 
-    return (
-        <form onSubmit = {submitHandler}>
-          {returnError()}
-          <ErrorAlert error={resError} />
+if (tables){
 
+}
+    return (
+        <>
+        <ErrorAlert error={errors} />
+        <form onSubmit = {submitHandler}>
           <label className="form-label" htmlFor="table_id">
             Select a table:
           </label>
@@ -101,12 +100,14 @@ const showTables = () => {
             {showTables()}
           </select>
 
-          <button className="btn btn-success m-1" type="submit">Submit</button>
+          <button className="btn btn-primary m-1" type="submit">Submit</button>
           <button className="btn btn-danger m-1" type="button" onClick={history.goBack}>
             Cancel
           </button>
         </form>
+        </>
       );
     }
+
 
     export default SeatReservation;

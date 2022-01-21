@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { updateResStatus } from "../utils/api";
 
-function Reservation({ reservation, loadDashboard }) {
+function Reservation({ reservation }) {
   if (!reservation || reservation.status === "finished") return null;
 
 
@@ -17,7 +17,7 @@ function Reservation({ reservation, loadDashboard }) {
         reservation.reservation_id,
         "cancelled",
         abortController.status
-      ).then(loadDashboard);
+      )
 
       return () => abortController.abort();
     }
@@ -27,14 +27,14 @@ function Reservation({ reservation, loadDashboard }) {
   return (
 <main>
     <div>
-    <h2>{reservation.reservation_id}</h2>
-      <p>{reservation.first_name}</p>
-      <p>{reservation.last_name}</p>
-      <p>{reservation.mobile_number}</p>
-      <p>{reservation.reservation_date}</p>
-      <p>{reservation.reservation_time}</p>
-      <p>{reservation.people}</p>
-      <p>{reservation.status}</p>
+    <h2 key="{reservation_id}">{reservation.reservation_id}</h2>
+      <p key="{first_name}">{reservation.first_name}</p>
+      <p key="{last_name}">{reservation.last_name}</p>
+      <p key="{mobile_number}">{reservation.mobile_number}</p>
+      <p key="{reservation_date}">{reservation.reservation_date}</p>
+      <p key="{reservation_time}">{reservation.reservation_time}</p>
+      <p key="{people}">{reservation.people}</p>
+      <p key="{status}">{reservation.status}</p>
 
     </div>
       {reservation.status === "booked" && (
@@ -59,11 +59,11 @@ function Reservation({ reservation, loadDashboard }) {
           </h3>
 
           <h3>
-            <a href={`/reservations/${reservation.reservation_id}/seat`}>
+          <a href={`/reservations/${reservation.reservation_id}/seat`}>
               <button className="btn btn-sm btn-success" type="button">
                 Seat
               </button>
-            </a>
+              </a>
           </h3>
         </>
       )}

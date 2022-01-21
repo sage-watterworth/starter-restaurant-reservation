@@ -15,10 +15,10 @@ import Reservation from "../layout/Reservation";
  */
 
 function Dashboard({ date }) {
-  const [, setReservations] = useState([]);
+  const [reservations, setReservations] = useState([]);
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [, setError] = useState();
+  const [error, setError] = useState();
 
   const history = useHistory();
   const dateQuery = useQuery().get("date");
@@ -114,17 +114,10 @@ let useDate;
       </div>
       <ErrorAlert error={reservationsError} />
 
-      <Reservation/>
+      {reservations.map (res => <Reservation reservation = {res} />)}
 
-      {/* // <li key="{first_name}">{res.first_name}</li>
-      // <li key="{last_name}">{res.last_name}</li>
-      // <li key="{mobile_number}">{res.mobile_number}</li>
-      // <li key="{reservation_date}">{formatAsDate(res.reservation_date)}</li>
-      // <li key="{reservation_time}">{formatAsTime(res.reservation_time)}</li>
-      // <li key="{people}">{res.people}</li>
-      // <li key="{status}">{res.status}</li>
-      // </ul>)} */}
 <div>
+
       {tables.map (tab => <ul key = {tab.table_id}>
               <li key="{table_name}">{tab.table_name}</li>
               <li key="{capacity}">{tab.capacity}</li>

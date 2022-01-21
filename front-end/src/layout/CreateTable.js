@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { newTable } from "../utils/api";
-// import ErrorAlert from "./ErrorAlert"
 
 
 
@@ -20,7 +19,6 @@ function CreateTable({ loadDashboard }) {
   function submitHandler(event) {
     event.preventDefault();
     const abortController = new AbortController();
-    // const submitError = [];
 
 
     if (validateFields()) {
@@ -31,7 +29,6 @@ function CreateTable({ loadDashboard }) {
             history.push(`/dashboard`))
             .catch(setError)
         }
-        // setErrors(submitError);
         return () => abortController.abort();
     }
 
@@ -48,15 +45,9 @@ return submitError === null;
 }
 
 
-// const returnError = () => {
-//     return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
-
-//   };
-
   return (
 
     <form onSubmit = {submitHandler}>
-    {/* {returnError()} */}
     <div className="mb-3">
         <label htmlFor="tableName" className="table_name">Table Name</label>
         <input
