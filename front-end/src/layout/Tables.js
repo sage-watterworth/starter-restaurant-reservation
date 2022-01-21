@@ -1,7 +1,10 @@
-import React from "react";
-import { finishTable } from "../utils/api";
+import { useState } from "react";
+import { finishTable} from "../utils/api";
+import Reservation from "./Reservation"
 
 function ListTables({table}) {
+  const [reservations, setReservations] = useState();
+  const [error, setError] = useState();
 
   if (!table) return null;
 
@@ -12,11 +15,14 @@ function ListTables({table}) {
       )
     ) {
       const abortController = new AbortController();
-
       finishTable(
-      table.table_id,
-      abortController.signal
-      )
+        table.table_id,
+        abortController.signal)
+
+        Reservation()
+        .then(setReservations)
+        .catch(setError);
+
       return () => abortController.abort();
     }
   }

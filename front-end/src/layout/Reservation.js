@@ -34,7 +34,7 @@ function Reservation({ reservation }) {
       <p key="{reservation_date}">{reservation.reservation_date}</p>
       <p key="{reservation_time}">{reservation.reservation_time}</p>
       <p key="{people}">{reservation.people}</p>
-      <p key="{status}">{reservation.status}</p>
+      <p key="{status}" data-reservation-id-status={reservation.reservation_id} >{reservation.status}</p>
 
     </div>
       {reservation.status === "booked" && (
