@@ -7,6 +7,8 @@ import ReservationForm from "./ReservationForm";
 import SeatReservation from "./SeatReservation";
 import CreateTable from "./CreateTable";
 import Search from "./Search";
+import { useParams } from "react-router-dom";
+
 
 
 /**
@@ -17,6 +19,8 @@ import Search from "./Search";
  * @returns {JSX.Element}
  */
 function Routes() {
+  const { reservation_id } = useParams();
+
   return (
     <Switch>
       <Route exact={true} path="/">
@@ -30,6 +34,9 @@ function Routes() {
       </Route>
       <Route path="/reservations/new">
         <ReservationForm/>
+      </Route>
+      <Route path="/reservations/:reservation_id/edit">
+        <ReservationForm reservation_id={reservation_id} />
       </Route>
       <Route path="/reservations/:reservation_id/seat">
         <SeatReservation />

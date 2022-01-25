@@ -1,88 +1,180 @@
-import React, {useState} from "react";
-import {createReservation, editReservation} from "../utils/api"
+import React, {useState, useEffect} from "react";
+import {createReservation, editReservation, getReservation} from "../utils/api"
 import { useHistory, useParams } from "react-router-dom";
 import ErrorAlert from "./ErrorAlert"
 
-function ReservationForm({loadDashboard}){
+function ReservationForm(){
 const history = useHistory();
-const {reservation_id} = useParams();
+const { reservation_id } = useParams();
 
-const [firstName, setFirstName] = useState("")
-const [lastName, setLastName] = useState("")
-const [mobileNumber, setMobileNumber] = useState("")
-const [reservationTime, setReservationTime] = useState("")
-const [reservationDate, setReservationDate] = useState("")
-const [people, setPeople] = useState("")
+
+// const [firstName, setFirstName] = useState("")
+// const [lastName, setLastName] = useState("")
+// const [mobileNumber, setMobileNumber] = useState("")
+// const [reservationTime, setReservationTime] = useState("")
+// const [reservationDate, setReservationDate] = useState("")
+// const [people, setPeople] = useState("")
+
+const initialFormState = {
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "",
+    reservation_time: "",
+    people: "",
+}
+
+const [form, setForm] = useState({...initialFormState});
 const [errors, setErrors] = useState([])
 
-const newReservation = {
-    first_name : firstName,
-    last_name : lastName,
-    mobile_number : mobileNumber,
-    reservation_time : reservationTime,
-    reservation_date : reservationDate,
-    people : +people
+// const newReservation = {
+//     first_name : firstName,
+//     last_name : lastName,
+//     mobile_number : mobileNumber,
+//     reservation_time : reservationTime,
+//     reservation_date : reservationDate,
+//     people : +people
+// }
+
+useEffect(() => {
+    const abortController = new AbortController();
+
+    if (reservation_id) {
+        async function loadReservation() {
+            try {
+                const reservation = await getReservation(reservation_id, abortController.status);
+                setForm(reservation);
+            } catch (error) {
+                setErrors([error.message]);
+            }
+        }
+        loadReservation();
+    }
+    return () => abortController.abort();
+}, [reservation_id]);
+
+
+
+const handleChange = ({ target }) => {
+    for (const field in form) {
+        if (form[field] === "") {
+          errors.push({
+            message: `${field.split("_").join(" ")} cannot be left blank.`,
+          });
+        }
+    }
+    for (const field in form) {
+    if (form[field] === "reservation_date") {
+        const newDate = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
+        const currentTime = Date.now();
+
+        if (newDate.getDay() === 2 && newDate < currentTime) {
+            setErrors([ "The restaurant is closed on Tuesday.", "Reservation must be in the future."]);
+        } else if (newDate.getDay() === 2) {
+            setErrors(["The restaurant is closed on Tuesday."]);
+        } else if (newDate < currentTime) {
+            setErrors(["Reservation must be in the future."]);
+        } else {
+            setErrors([]);
+        }
+    }
+}
+    // validate reservation time is during open hours
+    for (const field in form) {
+    if (form[field] === "reservation_time") {
+        const open = 1030;
+        const close = 2130;
+        const reservation = form.reservation_time.substring(0, 2) + form.reservation_time.substring(3);
+        if (reservation > open && reservation < close) {
+            setErrors([]);
+        } else {
+            setErrors(["Please create a reservation between 10:30am and 9:30pm."]);
+        }
+    }
+    setForm({
+        ...form,
+        [target.name]: target.name === "people" ? Number(target.value) : target.value,
+         });
+    }
 }
 
-if ({reservation_id}){
 
-}
 
 function submitHandler(e){
-    e.preventDefault()
+    e.preventDefault();
     const abortController = new AbortController();
-    const submitError = [];
 
-    if (validateDate(submitError) && validateFormFields(submitError)){
-        createReservation(newReservation, abortController.signal)
-        .then(console.log)
-        .then(loadDashboard)
-        .then(() =>
-                history.push(`/dashboard?date=${newReservation.reservation_date}`)
-              )
-        .catch(setErrors)
-    }
-    setErrors(submitError);
-    return () => abortController.abort();
-}
-
-
-function validateFormFields(submitError){
-    for(const field in newReservation){
-        if (newReservation[field] === ""){
-            submitError.push({message: `${field} cannot be left empty.`});
+    // POST request (new reservation)
+    if (!reservation_id) {
+        async function postData() {
+            try {
+                await createReservation(form, abortController.signal);
+                history.push(`/dashboard?date=${form.reservation_date}`);
+            } catch (error) {
+                setErrors([...errors, error.message]);
+            }
+        }
+        // do not send POST request if there is a pending error message
+        if (errors.length === 0) {
+            postData();
         }
     }
-return submitError.length === 0;
-}
-
-function validateDate(submitError){
-        const newReservationDate = new Date(
-          `${newReservation.reservation_date} ${newReservation.reservation_time}:00.000`
-        );
-        const today = new Date();
-
-        if (newReservationDate.getDay() === 2) {
-            submitError.push({message: "resturant is closed on Tuesday"});
+    // PUT request (edit reservation)
+    if (reservation_id) {
+        async function putData() {
+            try {
+                setErrors([]);
+                await editReservation(reservation_id, form, abortController.signal);
+                history.push(`/dashboard?date=${form.reservation_date}`);
+            } catch (error) {
+                setErrors([...errors, error.message]);
+            }
         }
-
-        if (newReservationDate < today) {
-            submitError.push({message: "please make a reservation for a future date"});
+        // do not send PUT request if there is a pending error message
+        if (errors.length === 0) {
+            putData();
+            }
         }
+    }
+// }
 
-        if (newReservationDate.getHours() < 10 || (newReservationDate.getHours() === 10 && newReservationDate.getMinutes() < 30)) {
-            submitError.push({message: "restaurant is not open until 10:30AM"});
-        }
 
-        if (newReservationDate.getHours() > 22 || (newReservationDate.getHours() === 22 && newReservationDate.getMinutes() >= 30)) {
-            submitError.push({message: "restaurant is closed after 10:30PM"});
-        }
+// function validateFormFields(submitError){
+//     for(const field in setForm){
+//         if (setForm[field] === ""){
+//             submitError.push({message: `${field} cannot be left empty.`});
+//         }
+//     }
+// return submitError.length === 0;
+// }
 
-        if (newReservationDate.getHours() > 21 || (newReservationDate.getHours() === 21 && newReservationDate.getMinutes() > 30)) {
-            submitError.push({message: "reservation must be made at least an hour before closing (10:30PM)"});
-        }
-    return submitError.length === 0;
-}
+// function validateDate(submitError){
+//         const newReservationDate = new Date(
+//           `${form.reservation_date} ${form.reservation_time}:00.000`
+//         );
+//         const today = new Date();
+
+//         if (newReservationDate.getDay() === 2) {
+//             submitError.push({message: "resturant is closed on Tuesday"});
+//         }
+
+//         if (newReservationDate < today) {
+//             submitError.push({message: "please make a reservation for a future date"});
+//         }
+
+//         if (newReservationDate.getHours() < 10 || (newReservationDate.getHours() === 10 && newReservationDate.getMinutes() < 30)) {
+//             submitError.push({message: "restaurant is not open until 10:30AM"});
+//         }
+
+//         if (newReservationDate.getHours() > 22 || (newReservationDate.getHours() === 22 && newReservationDate.getMinutes() >= 30)) {
+//             submitError.push({message: "restaurant is closed after 10:30PM"});
+//         }
+
+//         if (newReservationDate.getHours() > 21 || (newReservationDate.getHours() === 21 && newReservationDate.getMinutes() > 30)) {
+//             submitError.push({message: "reservation must be made at least an hour before closing (10:30PM)"});
+//         }
+//     return submitError.length === 0;
+// }
 
 const returnError = () => {
     return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
@@ -102,9 +194,9 @@ return (
     className="form-control"
     id="first_name"
     name="first_name"
-    value= {firstName}
+    value= {form.first_name}
     placeholder= "First Name"
-    onChange={e => setFirstName(e.target.value)}
+    onChange={handleChange}
     required />
   </div>
   <div className="mb-3">
@@ -115,9 +207,9 @@ return (
     className="form-control"
     id="last_name"
     name="last_name"
-    value= {lastName}
+    value= {form.last_name}
     placeholder= "Last Name"
-    onChange={e => setLastName(e.target.value)}
+    onChange={handleChange}
 
     required />
   </div>
@@ -129,8 +221,8 @@ return (
         className="form-control"
         id="mobile_bumber"
         name="mobile_number"
-        value= {mobileNumber}
-        onChange={e => setMobileNumber(e.target.value)}
+        value= {form.mobile_number}
+        onChange={handleChange}
         placeholder= "111-222-3456"
         required />
   </div>
@@ -142,8 +234,8 @@ return (
         className="reservation-date"
         id="reservation-date"
         name="reservation_date"
-        value= {reservationDate}
-        onChange={e => setReservationDate(e.target.value)}
+        value= {form.reservation_date}
+        onChange={handleChange}
         required />
   </div>
   <div className="mb-3">
@@ -154,8 +246,8 @@ return (
         className="form-control"
         id="reservation_time"
         name="reservation_time"
-        value= {reservationTime}
-        onChange={e => setReservationTime(e.target.value)}
+        value= {form.reservation_time}
+        onChange={handleChange}
         required />
   </div>
   <div className="mb-3">
@@ -166,8 +258,8 @@ return (
         className="form-control"
         id="people"
         name="people"
-        value= {people}
-        onChange={e => setPeople(e.target.value)}
+        value= {+form.people}
+        onChange={handleChange}
         min={1}
         required />
   </div>
