@@ -82,12 +82,14 @@ let useDate;
 
   return (
     <main>
-      <h1>Dashboard</h1>
+      <div >
+      <h1>Reservations</h1>
       <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for date</h4>
-
-        <button
-            className="btn-xs rounded btn-success btn-outline-success m-1 text-white"
+        <h4 className="mb-0">View by date: </h4>
+      </div>
+      <div>
+      <button
+            className="button-grey"
             type="button"
             name="previous"
             onClick={handleClick}
@@ -95,7 +97,7 @@ let useDate;
             Yesterday
           </button>
         <button
-            className="btn-xs rounded btn-success btn-outline-success m-1 text-white"
+            className="button-grey"
             type="button"
             name="today"
             onClick={handleClick}
@@ -104,7 +106,7 @@ let useDate;
           </button>
 
           <button
-            className="btn-xs rounded btn-success btn-outline-success m-1 text-white"
+            className="button-grey"
             type="button"
             name="next"
             onClick={handleClick}
@@ -112,9 +114,10 @@ let useDate;
             Tomorrow
           </button>
       </div>
+      </div>
 
       <ErrorAlert error={reservationsError} />
-{reservations.map (res => <Reservation reservation = {res} />)}
+{reservations.filter(res=> res.status !== "cancelled").map (res => <Reservation reservation = {res} />)}
 
 {tables.map (tab => <ListTables table={tab} refresh={()=>history.go(0)}/>)}
 

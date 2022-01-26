@@ -28,14 +28,17 @@ function ListTables({table, refresh}) {
   }
 
   return (
-    <div>
-      <p key ="{table_id}">{table.table_id}</p>
-      <p key ="{table_name}">{table.table_name}</p>
-      <p key ="{capacity}">{table.capacity}</p>
-      <p data-table-id-status={table.table_id}>
+  <main>
+    <div class="tables-div row mt-10">
+      {/* <p key ="{table_id}">{table.table_id}</p> */}
+      <p key ="{table_name}">Table: {table.table_name} | </p>
+
+      <p key ="{capacity}">Capacity: {table.capacity} | </p>
+
+      <p data-table-id-status={table.table_id}> Status:
         {table.status}
-        {/* {table.reservation_id ? table.reservation_id : "--"} */}
-      </p>
+        {/* {table.reservation_id ? table.reservation_id.last_name : "--"} */}
+        </p>
       {table.status === "occupied" && (
         <p className="text-center">
           <button
@@ -48,7 +51,8 @@ function ListTables({table, refresh}) {
           </button>
         </p>
       )}
-    </div>
+      </div>
+    </main>
   );
 }
 

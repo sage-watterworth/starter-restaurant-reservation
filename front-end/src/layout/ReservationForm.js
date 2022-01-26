@@ -7,14 +7,6 @@ function ReservationForm(){
 const history = useHistory();
 const { reservation_id } = useParams();
 
-
-// const [firstName, setFirstName] = useState("")
-// const [lastName, setLastName] = useState("")
-// const [mobileNumber, setMobileNumber] = useState("")
-// const [reservationTime, setReservationTime] = useState("")
-// const [reservationDate, setReservationDate] = useState("")
-// const [people, setPeople] = useState("")
-
 const initialFormState = {
     first_name: "",
     last_name: "",
@@ -27,14 +19,6 @@ const initialFormState = {
 const [form, setForm] = useState({...initialFormState});
 const [errors, setErrors] = useState([])
 
-// const newReservation = {
-//     first_name : firstName,
-//     last_name : lastName,
-//     mobile_number : mobileNumber,
-//     reservation_time : reservationTime,
-//     reservation_date : reservationDate,
-//     people : +people
-// }
 
 useEffect(() => {
     const abortController = new AbortController();
@@ -46,6 +30,7 @@ useEffect(() => {
                 setForm(reservation);
             } catch (error) {
                 setErrors([error.message]);
+                console.log(error)
             }
         }
         loadReservation();
@@ -55,7 +40,9 @@ useEffect(() => {
 
 
 
+
 const handleChange = ({ target }) => {
+    setErrors([])
     for (const field in form) {
         if (form[field] === "") {
           errors.push({
@@ -136,45 +123,7 @@ function submitHandler(e){
             }
         }
     }
-// }
 
-
-// function validateFormFields(submitError){
-//     for(const field in setForm){
-//         if (setForm[field] === ""){
-//             submitError.push({message: `${field} cannot be left empty.`});
-//         }
-//     }
-// return submitError.length === 0;
-// }
-
-// function validateDate(submitError){
-//         const newReservationDate = new Date(
-//           `${form.reservation_date} ${form.reservation_time}:00.000`
-//         );
-//         const today = new Date();
-
-//         if (newReservationDate.getDay() === 2) {
-//             submitError.push({message: "resturant is closed on Tuesday"});
-//         }
-
-//         if (newReservationDate < today) {
-//             submitError.push({message: "please make a reservation for a future date"});
-//         }
-
-//         if (newReservationDate.getHours() < 10 || (newReservationDate.getHours() === 10 && newReservationDate.getMinutes() < 30)) {
-//             submitError.push({message: "restaurant is not open until 10:30AM"});
-//         }
-
-//         if (newReservationDate.getHours() > 22 || (newReservationDate.getHours() === 22 && newReservationDate.getMinutes() >= 30)) {
-//             submitError.push({message: "restaurant is closed after 10:30PM"});
-//         }
-
-//         if (newReservationDate.getHours() > 21 || (newReservationDate.getHours() === 21 && newReservationDate.getMinutes() > 30)) {
-//             submitError.push({message: "reservation must be made at least an hour before closing (10:30PM)"});
-//         }
-//     return submitError.length === 0;
-// }
 
 const returnError = () => {
     return errors.map((error, idx) => <ErrorAlert key={idx} error={error} />);
