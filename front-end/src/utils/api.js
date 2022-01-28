@@ -67,3 +67,50 @@ export async function listReservations(params, signal) {
     .then(formatReservationDate)
     .then(formatReservationTime);
 }
+
+export async function getReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}`);
+  return await fetchJson(url, { headers, signal }, [])
+}
+
+
+export async function createReservation(reservation, signal){
+  const url = new URL(`${API_BASE_URL}/reservations`);
+  const body = JSON.stringify({data: reservation})
+  return await fetchJson(url, { headers, signal, method: "POST", body }, []);
+}
+
+
+export async function listTables(signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  return await fetchJson(url, { headers, signal, method: "GET" }, []);
+}
+
+export async function newTable(table, signal) {
+  const url = new URL(`${API_BASE_URL}/tables`);
+  const body = JSON.stringify({ data: table });
+  return await fetchJson(url, { headers, signal, method: "POST", body }, []);
+}
+
+export async function seatTable(reservation_id, table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  const body = JSON.stringify({ data: { reservation_id: reservation_id } });
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
+}
+
+export async function updateResStatus(reservation_id, status, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const body = JSON.stringify({ data: { status: status } });
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
+}
+
+export async function finishTable(table_id, signal) {
+  const url = `${API_BASE_URL}/tables/${table_id}/seat`;
+  return await fetchJson(url, { headers, signal, method: "DELETE" }, []);
+}
+
+export async function editReservation(reservation_id, reservation, signal) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const body = JSON.stringify({ data: reservation });
+  return await fetchJson(url, { headers, signal, method: "PUT", body }, []);
+}
