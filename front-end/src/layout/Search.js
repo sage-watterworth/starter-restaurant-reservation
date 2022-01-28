@@ -45,12 +45,12 @@ function Search() {
 
   return (
     <div>
-       <h1 className="font-weight-bold d-flex justify-content-center mt-4 mb-4 pb-4">
-          Search
-        </h1>
+      <div className="jumbotron">
+      <h1 className="d-flex justify-content-center mt-4 mb-4 pb-4 display-4">Search Reservations</h1>
+      </div>
       <form>
         <ErrorAlert error={error} />
-        <div className="input-group w-50">
+        <div className="input-group w-50 justify-content-center">
           <input
             className="form-control mr-2 border-dark rounded"
             name="mobile_number"
@@ -62,25 +62,12 @@ function Search() {
             required
           />
           <button
-            className="btn-xs btn-outline-0 btn-primary rounded px-2 pb-1"
+            className="button-grey"
             type="submit"
             onClick={handleSubmit}
-          >
-          </button>
+          > Search </button>
         </div>
       </form>
-
-            {/* <th key ="{reservation_id}">ID</th>
-            <th key ="{reservation_id}">First Name</th>
-            <th key ="{reservation_id}">Last Name</th>
-            <th key ="{reservation_id}">Mobile Number</th>
-            <th key ="{reservation_id}">Date</th>
-            <th key ="{reservation_id}">Time</th>
-            <th key ="{reservation_id}">People</th>
-            <th key ="{reservation_id}">Status</th>
-            <th key ="{reservation_id}">Edit</th>
-            <th key ="{reservation_id}">Cancel</th>
-            <th key ="{reservation_id}">Seat</th> */}
         <div>{searchResultsJSX()}</div>
     </div>
   );

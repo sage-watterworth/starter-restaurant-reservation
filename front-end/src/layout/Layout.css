@@ -48,7 +48,13 @@ body{
 }
 
 
-h2{
+h1{
   font-family: 'Verdana', sans-serif;
   font-size: medium;
 }
+
+/*
+h2{
+  font-family: 'Verdana', sans-serif;
+  font-size: medium;
+} */

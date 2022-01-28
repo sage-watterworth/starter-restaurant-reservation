@@ -82,11 +82,12 @@ let useDate;
 
   return (
     <main>
-      <div >
-      <h1>Reservations</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">View by date: </h4>
+      <div className="jumbotron">
+      <h1 className="display-4">Reservations</h1>
+      <div className="d-md-flex mb-1">
+        <h4 className="mb-0 lead">View by date: </h4>
       </div>
+      <hr className="my-4"/>
       <div>
       <button
             className="button-grey"

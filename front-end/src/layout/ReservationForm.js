@@ -13,36 +13,57 @@ const initialFormState = {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: "",
+    people: Number(""),
 }
 
 const [form, setForm] = useState({...initialFormState});
 const [errors, setErrors] = useState([])
 
 
+// useEffect(() => {
+//     const abortController = new AbortController();
+
+//     if (reservation_id) {
+//         async function loadReservation() {
+//             try {
+//                 const reservation = await getReservation(reservation_id, abortController.status);
+//                 console.log(reservation.reservation_date.slice(0,10))
+
+//             } catch (error) {
+//                 setErrors([error.message]);
+//                 console.log(error)
+//             }
+//         }
+//         loadReservation();
+//     }
+//     return () => abortController.abort();
+// }, [reservation_id]);
+
 useEffect(() => {
     const abortController = new AbortController();
-
     if (reservation_id) {
-        async function loadReservation() {
-            try {
-                const reservation = await getReservation(reservation_id, abortController.status);
-                setForm(reservation);
-            } catch (error) {
-                setErrors([error.message]);
-                console.log(error)
-            }
-        }
-        loadReservation();
+     getReservation(reservation_id, abortController.signal)
+        .then((reservation) => {
+
+          setForm({
+            ...reservation,
+            reservation_date: new Date(reservation.reservation_date)
+              .toISOString()
+              .substr(0, 10),
+          });
+        })
+        .catch(setErrors);
     }
     return () => abortController.abort();
-}, [reservation_id]);
+  }, [reservation_id]);
 
 
 
 
 const handleChange = ({ target }) => {
+
     setErrors([])
+
     for (const field in form) {
         if (form[field] === "") {
           errors.push({
@@ -52,19 +73,27 @@ const handleChange = ({ target }) => {
     }
     for (const field in form) {
     if (form[field] === "reservation_date") {
-        const newDate = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
-        const currentTime = Date.now();
+        // const newDate = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
+        // const currentTime = Date.now();
 
-        if (newDate.getDay() === 2 && newDate < currentTime) {
+        const date = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
+        // const reservation = date.getTime();
+        const now = Date.now();
+
+        if (date.getDay() === 2 && date < now) {
             setErrors([ "The restaurant is closed on Tuesday.", "Reservation must be in the future."]);
-        } else if (newDate.getDay() === 2) {
+        } else if (date.getDay() === 2) {
             setErrors(["The restaurant is closed on Tuesday."]);
-        } else if (newDate < currentTime) {
+        }
+        else if (date < now) {
             setErrors(["Reservation must be in the future."]);
-        } else {
+        }
+        else {
             setErrors([]);
         }
+        console.log(setErrors)
     }
+
 }
     // validate reservation time is during open hours
     for (const field in form) {
@@ -212,9 +241,8 @@ return (
         min={1}
         required />
   </div>
-  <button type="submit" className="btn btn-primary">Submit</button>
-  <button type="cancel" className="btn btn-primary" onClick={history.goBack}
->Cancel</button>
+  <button type="submit" className="btn btn-sm btn-info">Submit</button>
+  <button type="cancel"  className="btn btn-sm btn-dark" onClick={history.goBack}>Cancel</button>
 
 </form>
 

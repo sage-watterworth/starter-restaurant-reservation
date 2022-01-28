@@ -68,8 +68,9 @@ async function fieldExists(req, res, next){
 }
 
 async function validDate(req, res, next){
-  if(req.body.data.reservation_date === "not-a-date"){
-    return next({status: 400, message: "reservation_date not valid"})
+  const date = new Date(req.body.data.reservation_date)
+  if(date.getTime() !== date.getTime()){
+  return next({status: 400, message: "reservation_date not valid"})
   }
   else{
     return next();
@@ -77,7 +78,8 @@ async function validDate(req, res, next){
 }
 
 async function validTime(req, res, next){
-  if(!req.body.data.reservation_time.match(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/)){
+  const date = new Date(req.body.data.reservation_date.slice(0,10) + " " + req.body.data.reservation_time)
+    if(date.getTime() !== date.getTime()){
     return next({status: 400, message: "reservation_time not valid"})
   }
   else{

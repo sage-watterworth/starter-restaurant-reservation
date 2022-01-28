@@ -27,16 +27,16 @@ function Reservation({ reservation }) {
   return (
 <main>
 
-<div class="accordion col-sm-6 mt-10" id="accordionExample">
-  <div class="card">
-    <div class="card-header acc-div" id="headingOne">
-      <h2 class="mb-1">
-        <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+<div className="accordion col-sm-6 mt-10" id="accordionExample">
+  <div className="card">
+    <div className="card-header acc-div" id="headingOne">
+      <h2 className="mb-1">
+        <button className="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
       {reservation.last_name} party of {reservation.people}
       </button>
     </h2>
-    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-      <div class="card-body acc-card text-align-left">
+    <div id="collapseOne" className="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+      <div className="card-body acc-card text-align-left">
       <p key="{first_name}">First Name: {reservation.first_name}</p>
       <p key="{last_name}">Last Name: {reservation.last_name}</p>
       <p key="{mobile_number}">Phone Number:{reservation.mobile_number}</p>
@@ -47,8 +47,8 @@ function Reservation({ reservation }) {
 
       {reservation.status === "booked" && (
         <>
-        <div class = "row d-flex justify-content-center">
-          <div class = "col-sm">
+        <div className = "row d-flex justify-content-center">
+          <div className = "col-sm">
           <h3 >
             <Link to={`/reservations/${reservation.reservation_id}/edit`}>
               <button className="btn btn-sm btn-secondary" type="button">
@@ -58,7 +58,7 @@ function Reservation({ reservation }) {
           </h3>
         </div>
 
-        <div class = "col-sm">
+        <div className = "col-sm">
           <h3>
             <button
               className="btn btn-sm btn-dark"
@@ -71,7 +71,7 @@ function Reservation({ reservation }) {
           </h3>
         </div>
 
-        <div class = "col-sm">
+        <div className = "col-sm">
           <h3>
           <a href={`/reservations/${reservation.reservation_id}/seat`}>
               <button className="btn btn-sm btn-info" type="button">

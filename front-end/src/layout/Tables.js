@@ -29,7 +29,7 @@ function ListTables({table, refresh}) {
 
   return (
   <main>
-    <div class="tables-div row mt-10">
+    <div className="tables-div row mt-10">
       {/* <p key ="{table_id}">{table.table_id}</p> */}
       <p key ="{table_name}">Table: {table.table_name} | </p>
 
@@ -42,7 +42,7 @@ function ListTables({table, refresh}) {
       {table.status === "occupied" && (
         <p className="text-center">
           <button
-            className="btn btn-sm btn-danger"
+            className="btn btn-sm btn-info"
             data-table-id-finish={table.table_id}
             onClick={handleFinish}
             type="button"

@@ -77,8 +77,9 @@ return submitError === null;
     </div>
 
 
-  <button type="submit" className="btn btn-primary"> Submit </button>
-  <button type="cancel" className="btn btn-danger" onClick={history.goBack}> Cancel </button>
+  <button type="submit" className="btn btn-sm btn-info"> Submit </button>
+  <button type="cancel" className="btn btn-sm btn-dark"
+ onClick={history.goBack}> Cancel </button>
 </form>
   );
 }
