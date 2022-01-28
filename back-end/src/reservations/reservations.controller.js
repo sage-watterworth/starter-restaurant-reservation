@@ -1,11 +1,9 @@
-/**
- * List handler for reservation resources
- */
-
 const service = require("./reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
-const requiredFields = [ //validation to submit a reservation into the system
+
+//validation to submit a reservation into the system
+const requiredFields = [
 "first_name",
   "last_name",
   "mobile_number",
@@ -14,7 +12,9 @@ const requiredFields = [ //validation to submit a reservation into the system
   "people",
 ];
 
-const validFields = [ //validation to confirm valid fields for API requests
+
+//validation to confirm valid fields for API requests
+const validFields = [
   "reservation_id",
   "first_name",
   "last_name",
@@ -32,8 +32,8 @@ function validData(req, res, next) {
   next();
 }
 
-
-async function list(req, res, next) { //returns a list of reservations (specific to query parameters)
+//returns a list of reservations (specific to query parameters)
+async function list(req, res, next) {
   if (req.query.date || req.query.mobile_number){
     const date = req.query.date;
     const mobile_number = req.query.mobile_number;
@@ -44,8 +44,8 @@ async function list(req, res, next) { //returns a list of reservations (specific
   }
 
 
-
-async function reservationExists(req, res, next) { //confirm the reservation exists by locating reservation_id
+//confirm the reservation exists by locating reservation_id
+async function reservationExists(req, res, next) {
   const { reservation_id } = req.params;
   const [reservation] = await service.read(reservation_id);
   if (reservation) {
@@ -181,7 +181,7 @@ function validateStatusCreate(req, res, next) {
   return next();
 }
 
-//Prevents a user from editing a table that has a status of finished.
+//prevents a user from editing a table that has a status of finished
 function validateStatusUpdate(req, res, next) {
   const status = res.locals.reservation.status;
   if (status === "finished") {
@@ -216,13 +216,26 @@ module.exports = {
         read],
   create: [validData,
           asyncErrorBoundary(fieldExists),
-          validDate,
-          validFutureDate,
-          validTime,
-          validPeople,
+          asyncErrorBoundary(validDate),
+          asyncErrorBoundary(validFutureDate),
+          asyncErrorBoundary(validTime),
+          asyncErrorBoundary(validPeople),
           validateStatusCreate,
           asyncErrorBoundary(createReservation)],
 
-  update: [validData, reservationExists, validateStatus, validateStatusUpdate, updateStatus],
-  edit: [validData, reservationExists, fieldExists, validDate, validFutureDate, validTime, validPeople, validateStatus, validateStatusUpdate, edit]
+  update: [validData,
+          asyncErrorBoundary(reservationExists),
+          asyncErrorBoundary(validateStatus),
+          asyncErrorBoundary(validateStatusUpdate),
+          asyncErrorBoundary(updateStatus)],
+  edit: [validData,
+        asyncErrorBoundary(reservationExists),
+        asyncErrorBoundary(fieldExists),
+        asyncErrorBoundary(validDate),
+        asyncErrorBoundary(validFutureDate),
+        asyncErrorBoundary(validTime),
+        asyncErrorBoundary(validPeople),
+        asyncErrorBoundary(validateStatus),
+        asyncErrorBoundary(validateStatusUpdate),
+        asyncErrorBoundary(edit)]
 };

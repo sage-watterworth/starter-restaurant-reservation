@@ -45,8 +45,11 @@ return submitError === null;
 
 
   return (
+<div>
+<h1 className="d-flex justify-content-center mt-4 mb-4 pb-4 display-4 header-font"> Create a Table </h1>
 
-    <form onSubmit = {submitHandler}>
+    <form className="form-style" onSubmit = {submitHandler}>
+
     <div className="mb-3">
         <label htmlFor="tableName" className="table_name">Table Name</label>
         <input
@@ -77,9 +80,10 @@ return submitError === null;
 
 
   <button type="submit" className="btn btn-sm btn-info"> Submit </button>
-  <button type="cancel" className="btn btn-sm btn-dark"
+  <button type="cancel" className="btn btn-sm btn-dark m-1"
  onClick={history.goBack}> Cancel </button>
 </form>
+</div>
   );
 }
 

@@ -81,14 +81,13 @@ let useDate;
   }
 
   return (
-    <main>
-      <div className="jumbotron">
-      <h1 className="display-4">Reservations</h1>
-      <div className="d-md-flex mb-1">
+    <main d-flex>
+      <div className="jumbotron justify-content-center">
+      <h1 className="display-4 header-font">Reservations</h1>
+      <div className="d-md-flex mb-1 justify-content-center">
         <h4 className="mb-0 lead">View by date: </h4>
       </div>
-      <hr className="my-4"/>
-      <div>
+      <div  className="d-md-flex mb-1 justify-content-center">
       <button
             className="button-grey"
             type="button"
@@ -121,7 +120,6 @@ let useDate;
 {reservations.filter(res=> res.status !== "cancelled").map (res => <Reservation reservation = {res} />)}
 
 {tables.map (tab => <ListTables table={tab} refresh={()=>history.go(0)}/>)}
-
 
     </main>
   );

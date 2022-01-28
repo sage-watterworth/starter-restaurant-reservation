@@ -43,18 +43,18 @@ function Search() {
 
   return (
     <div>
-      <div className="jumbotron">
-      <h1 className="d-flex justify-content-center mt-4 mb-4 pb-4 display-4">Search Reservations</h1>
+      <div >
+      <h1 className="d-flex justify-content-center mt-4 mb-4 pb-4 display-4 header-font">Search Reservations</h1>
       </div>
-      <form>
+      <form className = "form-style">
         <ErrorAlert error={error} />
-        <div className="input-group w-50 justify-content-center">
+        <div className="input-group w-75 justify-content-center">
           <input
             className="form-control mr-2 border-dark rounded"
             name="mobile_number"
             id="mobile_number"
             type="tel"
-            placeholder="Enter a customer's phone number"
+            placeholder="Enter a reservation phone #"
             onChange={handleChange}
             value={FormData.mobile_number}
             required

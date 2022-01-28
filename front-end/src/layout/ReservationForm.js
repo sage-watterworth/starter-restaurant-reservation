@@ -137,8 +137,9 @@ const returnError = () => {
 
 
 return (
-
-    <form onSubmit = {submitHandler}>
+<div>
+    <h1 className="d-flex justify-content-center mt-4 mb-4 pb-4 display-4 header-font"> Create a Reservation </h1>
+    <form className = "form-style" onSubmit = {submitHandler}>
     {returnError()}
   <div className="mb-3">
     <label htmlFor="firstName" className="form-label">
@@ -218,10 +219,10 @@ return (
         required />
   </div>
   <button type="submit" className="btn btn-sm btn-info">Submit</button>
-  <button type="cancel"  className="btn btn-sm btn-dark" onClick={history.goBack}>Cancel</button>
+  <button type="cancel"  className="btn btn-sm btn-dark m-1" onClick={history.goBack}>Cancel</button>
 
 </form>
-
+</div>
 )
 }
 

@@ -11,14 +11,17 @@ async function validData (req, res, next){
 }
 
 async function validFields (req, res, next){
-    if (!req.body.data.table_name || req.body.data.table_name === "") { // validate table_name is included and more than 2 characters
+
+  // validate table_name is included and more than 2 characters
+    if (!req.body.data.table_name || req.body.data.table_name === "") {
         return next({ status: 400, message: "'table_name' cannot be empty",});
       }
     if (req.body.data.table_name.length < 2) {
     return next({ status: 400, message: "'table_name' must be at least 2 characters",});
     }
 
-    if (!req.body.data.capacity || req.body.data.capacity === "") { //validate capacity is included and is a number
+    //validate capacity is included and is a number
+    if (!req.body.data.capacity || req.body.data.capacity === "") {
         return next({ status: 400, message: "'capacity' cannot be empty",});
       }
     if (typeof req.body.data.capacity !== "number") {
@@ -39,13 +42,14 @@ async function listTables(req, res) {
   }
 
 
-async function create (req, res){ // creates a new table
+async function create (req, res){
     const status = req.body.data.reservation_id ? "occupied" : "free"
     const newTable = { ...req.body.data, status };
     const response = await service.create(newTable)
     res.status(201).json({ data: response[0] });
 }
 
+//verifies that the reservation_id is included and exists
 async function validateReservation (req, res, next){
     const { reservation_id } = req.body.data;
     if (!reservation_id) {
@@ -96,7 +100,7 @@ async function validateTableSeats (req, res, next){
       next();
     }
 
-
+//seating a table updates the Reservation status to "seated"
 async function seatTable (req, res){
     const table_id = res.locals.table.table_id;
     const reservation_id = res.locals.reservation.reservation_id;
@@ -105,6 +109,8 @@ async function seatTable (req, res){
         res.status(200).json({ data: res.locals.table });
     }
 
+
+//update reservation status to "finished", and table returnts to status of free
 async function destroy (req, res, next){
     const table_id = res.locals.table
     if(table_id.status !== "occupied"){
@@ -129,8 +135,11 @@ module.exports = {
             asyncErrorBoundary(validateTableSeats),
             asyncErrorBoundary(seatTable)],
 
-    create: [validData, validFields, create],
+    create: [asyncErrorBoundary(validData),
+            asyncErrorBoundary(validFields),
+            asyncErrorBoundary(create)],
 
-    destroy: [validateTableId, destroy],
+    destroy: [asyncErrorBoundary(validateTableId),
+              asyncErrorBoundary(destroy)],
 
   };
