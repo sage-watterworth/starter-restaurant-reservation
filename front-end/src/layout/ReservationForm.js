@@ -19,26 +19,7 @@ const initialFormState = {
 const [form, setForm] = useState({...initialFormState});
 const [errors, setErrors] = useState([])
 
-
-// useEffect(() => {
-//     const abortController = new AbortController();
-
-//     if (reservation_id) {
-//         async function loadReservation() {
-//             try {
-//                 const reservation = await getReservation(reservation_id, abortController.status);
-//                 console.log(reservation.reservation_date.slice(0,10))
-
-//             } catch (error) {
-//                 setErrors([error.message]);
-//                 console.log(error)
-//             }
-//         }
-//         loadReservation();
-//     }
-//     return () => abortController.abort();
-// }, [reservation_id]);
-
+//api call to the specified reservation_id to be edited. correct the date format
 useEffect(() => {
     const abortController = new AbortController();
     if (reservation_id) {
@@ -61,9 +42,7 @@ useEffect(() => {
 
 
 const handleChange = ({ target }) => {
-
     setErrors([])
-
     for (const field in form) {
         if (form[field] === "") {
           errors.push({
@@ -71,13 +50,10 @@ const handleChange = ({ target }) => {
           });
         }
     }
+    // validate reservation time is in the future and not on Tuesday
     for (const field in form) {
     if (form[field] === "reservation_date") {
-        // const newDate = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
-        // const currentTime = Date.now();
-
         const date = new Date(`${form.reservation_date} ${form.reservation_time}:00.000`);
-        // const reservation = date.getTime();
         const now = Date.now();
 
         if (date.getDay() === 2 && date < now) {
@@ -120,7 +96,7 @@ function submitHandler(e){
     e.preventDefault();
     const abortController = new AbortController();
 
-    // POST request (new reservation)
+    // POST request to create a new reservation
     if (!reservation_id) {
         async function postData() {
             try {
@@ -130,12 +106,12 @@ function submitHandler(e){
                 setErrors([...errors, error.message]);
             }
         }
-        // do not send POST request if there is a pending error message
+        // IF there are any errors, the POST request will not send
         if (errors.length === 0) {
             postData();
         }
     }
-    // PUT request (edit reservation)
+    // PUT request to edit the reservation
     if (reservation_id) {
         async function putData() {
             try {
@@ -146,7 +122,7 @@ function submitHandler(e){
                 setErrors([...errors, error.message]);
             }
         }
-        // do not send PUT request if there is a pending error message
+        // IF there are any errors, the PUT request will not send
         if (errors.length === 0) {
             putData();
             }

@@ -1,10 +1,7 @@
-import { useState } from "react";
 import { finishTable} from "../utils/api";
-import Reservation from "./Reservation"
+
 
 function ListTables({table, refresh}) {
-  // const [reservations, setReservations] = useState();
-  // const [error, setError] = useState();
 
   if (!table) return null;
 
@@ -19,10 +16,6 @@ function ListTables({table, refresh}) {
         table.table_id,
         abortController.signal).then(refresh)
 
-        // Reservation()
-        // .then(setReservations)
-        // .catch(setError);
-
       return () => abortController.abort();
     }
   }
@@ -30,14 +23,10 @@ function ListTables({table, refresh}) {
   return (
   <main>
     <div className="tables-div row mt-10">
-      {/* <p key ="{table_id}">{table.table_id}</p> */}
       <p key ="{table_name}">Table: {table.table_name} | </p>
-
       <p key ="{capacity}">Capacity: {table.capacity} | </p>
-
       <p data-table-id-status={table.table_id}> Status:
         {table.status}
-        {/* {table.reservation_id ? table.reservation_id.last_name : "--"} */}
         </p>
       {table.status === "occupied" && (
         <p className="text-center">

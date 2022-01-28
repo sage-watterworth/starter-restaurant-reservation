@@ -20,7 +20,6 @@ function CreateTable({ loadDashboard }) {
     event.preventDefault();
     const abortController = new AbortController();
 
-
     if (validateFields()) {
       newTable(tableData, abortController.signal)
         .then(console.log)
@@ -32,7 +31,7 @@ function CreateTable({ loadDashboard }) {
         return () => abortController.abort();
     }
 
-
+  //validate all vields are filled out
   function validateFields() {
       let submitError = null;
     if (tableData.table_name === "" || tableData.capacity === "") {

@@ -6,7 +6,6 @@ import ErrorAlert from "./ErrorAlert";
 function SeatReservation (){
     const history = useHistory();
     const {reservation_id} = useParams();
-
     const [reservation, setReservation] = useState([])
     const [table_id, setTable_id] = useState(0);
     const [tables, setTables] = useState([]);
@@ -14,6 +13,7 @@ function SeatReservation (){
     const submitErrors = [];
 
 
+//api call to get reservation by specified id and list of tables
 useEffect(() => {
     const abortController = new AbortController();
     getReservation(reservation_id)
@@ -27,8 +27,9 @@ useEffect(() => {
 }, [reservation_id]);
 
 
-function validateSeat () {
 
+//validate if the table and reservation exists, if the table is occupied or if the table is too small for the party
+function validateSeat () {
 const givenTable = tables.find((table) => table.table_id === Number(table_id));
 const givenRes = reservation
 
@@ -57,7 +58,7 @@ console.log("length"+submitErrors.lenght)
 
 
 
-
+//will seat specified reservation at selected table so long as validations pass
 function submitHandler(event){
      event.preventDefault();
      setErrors(null);
@@ -69,7 +70,7 @@ function submitHandler(event){
     }
     return () => abortController.abort();
     }
-
+//display tables with available capacity
 const showTables = () => {
     return tables.map((table)=> (
         <option key={table.table_id} value={table.table_id}>

@@ -11,14 +11,12 @@ function Search() {
   const [reservations, setReservations] = useState([]);
   const [error, setError] = useState(null);
 
-  /**
-   * update the state of mobileNumber when the user makes any changes to it
-   */
+  //update the state of mobile number when the user makes any changes to it
   function handleChange({ target }) {
     setMobileNumber(target.value);
   }
 
-  /** makes a get request to list all reservations under the given mobileNumber **/
+  // sends a get request to list all reservations under the specified mobile number
   function handleSubmit(event) {
     event.preventDefault();
     const abortController = new AbortController();
@@ -31,8 +29,8 @@ function Search() {
     return () => abortController.abort();
   }
 
-
-  const searchResultsJSX = () => {
+  // return search results from get request
+  const searchResults = () => {
     return reservations.length > 0 ? (
       reservations.map((reservation) => (
         <Reservation
@@ -68,7 +66,7 @@ function Search() {
           > Search </button>
         </div>
       </form>
-        <div>{searchResultsJSX()}</div>
+        <div>{searchResults()}</div>
     </div>
   );
 }
