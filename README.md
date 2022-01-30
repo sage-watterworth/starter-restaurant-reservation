@@ -3,7 +3,7 @@
 Description:
 The restaurant reservation system allows a user to create, update, and edit a reservation. The user can also seat a reservation at a specified table, create more tables, and finish a reservation to free up an existing table.
 
-**View the live site [here.]**(https://frontend-reservation.herokuapp.com/dashboard)
+**View the live site [here.](https://frontend-reservation.herokuapp.com/dashboard)**
 
 **Technologies used:**
 
@@ -33,7 +33,8 @@ Run npm start from the front-end directory to start the React app at http://loca
 
 **Project walkthrough**
 
-![View Dashboard](/starter-restaurant-reservation/front-end/project-screenshots/view-dashboard-closed)
+![View Dashboard](/starter-restaurant-reservation/blob/main/front-end/project-screenshots/view-dashboard-closed)
+The dashboard will show a list of reservations for the current date, and a list of tables with the status of free or occupied. Toggle to view different dates by selecting yesterday, today, and tomorrow. The URL slug will let you know what date you are viewing.
 The dashboard will show a list of reservations for the current date, and a list of tables with the status of free or occupied. Toggle to view different dates by selecting yesterday, today, and tomorrow. The URL slug will let you know what date you are viewing.
 
 ![View Dashboard Expanded](/starter-restaurant-reservation/front-end/project-screenshots/view-dashboard-expand)
