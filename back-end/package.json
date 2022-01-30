@@ -6,7 +6,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Thinkful-Ed/starter-restaurant-reservation",
-    "directory": "/back-end"
+    "directory": "/back-end",
+  "engines": {
+    "node": "16.1.0"
+    }
   },
   "scripts": {
     "start": "node src/server.js",
