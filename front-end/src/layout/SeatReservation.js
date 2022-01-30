@@ -101,8 +101,8 @@ if (tables){
             {showTables()}
           </select>
 
-          <button className="btn btn-primary m-1" type="submit">Submit</button>
-          <button className="btn btn-danger m-1" type="button" onClick={history.goBack}>
+          <button className="btn btn-sm btn-info" type="submit">Submit</button>
+          <button className="btn btn-sm btn-dark m-1" type="button" onClick={history.goBack}>
             Cancel
           </button>
         </form>
