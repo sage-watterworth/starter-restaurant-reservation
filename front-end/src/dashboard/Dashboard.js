@@ -117,9 +117,12 @@ let useDate;
       </div>
 
       <ErrorAlert error={reservationsError} />
+
 {reservations.filter(res=> res.status !== "cancelled").map (res => <Reservation reservation = {res} />)}
 
-{tables.map (tab => <ListTables table={tab} refresh={()=>history.go(0)}/>)}
+  <div className="table-list mb-1">
+  {tables.map (tab => <ListTables table={tab} refresh={()=>history.go(0)}/>)}
+  </div>
 
     </main>
   );

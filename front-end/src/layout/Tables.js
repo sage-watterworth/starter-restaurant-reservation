@@ -22,12 +22,12 @@ function ListTables({table, refresh}) {
 
   return (
   <main>
-    <div className="tables-div row mt-10">
-      <p key ="{table_name}">Table: {table.table_name} | </p>
-      <p key ="{capacity}">Capacity: {table.capacity} | </p>
-      <p data-table-id-status={table.table_id}> Status:
-        {table.status}
-        </p>
+      <div className="col-md-6 col-lg-3 mt-4">
+        <div className="card shadow pb-5 mb-4" style={{ width: "18rem" }}>
+         <p key ="{table_name}" className="card-title mt-4 align-center">Table: {table.table_name} </p>
+      <div className="card-body">
+       <p key ="{capacity}">Capacity: {table.capacity} </p>
+       <p data-table-id-status={table.table_id}> Status: {table.status}</p>
       {table.status === "occupied" && (
         <p className="text-center">
           <button
@@ -40,6 +40,8 @@ function ListTables({table, refresh}) {
           </button>
         </p>
       )}
+      </div>
+      </div>
       </div>
     </main>
   );
